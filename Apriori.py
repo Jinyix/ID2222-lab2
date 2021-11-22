@@ -42,28 +42,31 @@ class Apriori:
         @param Ck: a list of sets
         @return: a list of sets
         '''
-
+        freqCount = {}
 
         for set in self.dataset:
             for candidateSet in Ck:
                 if candidateSet.issubset(set):
                     candidateSet = frozenset(candidateSet)
-                    if candidateSet not in self.freqCount:
-                        self.freqCount[candidateSet] = 0
+                    if candidateSet not in freqCount:
+                        freqCount[candidateSet] = 0
 
-                    self.freqCount[candidateSet] +=1
+                    freqCount[candidateSet] +=1
 
         # ready to filter
         totalItemsets = float(len(self.dataset)) # number of all itemsets
         Lk  = [] # used to store "qualified" candidates
 
         # for each candidate in input Ck
-        for candidateSet in self.freqCount:
+        for candidateSet in freqCount:
             # compute its support
-            support = self.freqCount[candidateSet] / totalItemsets
+            support = freqCount[candidateSet] / totalItemsets
             # add it to Lk if it has support at least self.support
             if support >= self.support:
                 Lk.append(candidateSet)
+
+        self.freqCount.update(freqCount)
+
         return Lk
 
     def _computeFrequentItemsets(self):
@@ -73,14 +76,15 @@ class Apriori:
         self.freqCount = {}
 
         # Initialize C1
-        self.C1 = []
+        C1 = []
         for itemset in self.dataset:
             for item in itemset:
-                if {item} not in self.C1:
-                    self.C1.append({item})
+                if {item} not in C1:
+                    C1.append({item})
+        print(C1)
 
         # Compute L1
-        L1 = self._filterLk(self.C1)
+        L1 = self._filterLk(C1)
         self.frequentItemsets.append(L1)
 
         # Start iteration
