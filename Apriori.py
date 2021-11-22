@@ -81,7 +81,6 @@ class Apriori:
             for item in itemset:
                 if {item} not in C1:
                     C1.append({item})
-        print(C1)
 
         # Compute L1
         L1 = self._filterLk(C1)
