@@ -10,7 +10,7 @@ class Apriori:
         #
         # self.frequentItemsets=[[frozenset({1}), frozenset({3}), frozenset({2}), frozenset({5})],
         #      [frozenset({3, 5}), frozenset({1, 3}), frozenset({2, 5}), frozenset({2, 3})], [frozenset({2, 3, 5})]]
-        # self.freqCount={frozenset({5}): 0.75, frozenset({3}): 0.75, frozenset({2, 3, 5}): 0.5, frozenset({1, 2}): 0.25,
+        # self.supportMap={frozenset({5}): 0.75, frozenset({3}): 0.75, frozenset({2, 3, 5}): 0.5, frozenset({1, 2}): 0.25,
         #                frozenset({1, 5}): 0.25, frozenset({3, 5}): 0.5, frozenset({4}): 0.25, frozenset({2, 3}): 0.5,
         #                frozenset({2, 5}): 0.75, frozenset({1}): 0.5, frozenset({1, 3}): 0.5, frozenset({2}): 0.75}
 
@@ -130,7 +130,7 @@ class Apriori:
                     L2 = list(elements[j])[: m - 1]
                     L1.sort()
                     L2.sort()
-                    if L1 == L2 and L1 and L2 :
+                    if L1 == L2 :
                         e1.append(elements[i] | elements[j])
             # returen itemsets with confidence > minConf
             e1 = self.calcConf(freqSet, e1, brl, minConf)
