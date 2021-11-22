@@ -42,6 +42,7 @@ class Apriori:
         @param Ck: a list of sets
         @return: a list of sets
         '''
+        # count frequency for every candidate itemset in Ck
         freqCount = {}
 
         for set in self.dataset:
@@ -61,19 +62,19 @@ class Apriori:
         for candidateSet in freqCount:
             # compute its support
             support = freqCount[candidateSet] / totalItemsets
+            self.supportMap.update({candidateSet: support})
+
             # add it to Lk if it has support at least self.support
             if support >= self.support:
                 Lk.append(candidateSet)
 
-        self.freqCount.update(freqCount)
-
         return Lk
 
     def _computeFrequentItemsets(self):
-        # Initialize result list and dict
+        # Used to store all result frequent itemsets
         self.frequentItemsets = []
-        # count frequency for every candidate itemset in Ck
-        self.freqCount = {}
+        # Used to store all support data
+        self.supportMap = {}
 
         # Initialize C1
         C1 = []
@@ -89,8 +90,10 @@ class Apriori:
         # Start iteration
         while len(self.frequentItemsets[-1]) > 0:
             Ck = self._generateNewCk(self.frequentItemsets[-1], L1)
+            # print(Ck)
 
             Lk = self._filterLk(Ck)
+            # print(Lk)
 
             # until no more Lk exists
             if len(Lk) == 0:
@@ -107,7 +110,7 @@ class Apriori:
     def calcConf(self, freqSet, elements, brl, minConf=0.7):
         prunedElements = []
         for conseq in elements:
-            conf = self.freqCount[freqSet] / self.freqCount[freqSet - conseq]
+            conf = self.supportMap[freqSet] / self.supportMap[freqSet - conseq]
             if conf >= minConf:
                 print(freqSet - conseq, '-->', conseq, 'conf:', conf)
                 brl.append((freqSet - conseq, conseq, conf))
@@ -123,12 +126,12 @@ class Apriori:
             # generate itemsets in length m+1 from elements
             for i in range(l):
                 for j in range(i + 1, l):
-                    L1 = list(self.frequentItemsets[i])[: m - 1]
-                    L2 = list(self.frequentItemsets[j])[: m - 1]
+                    L1 = list(elements[i])[: m - 1]
+                    L2 = list(elements[j])[: m - 1]
                     L1.sort()
                     L2.sort()
                     if L1 == L2 and L1 and L2 :
-                        e1.append(set(self.frequentItemsets[i]) | set(self.frequentItemsets[j]))
+                        e1.append(elements[i] | elements[j])
             # returen itemsets with confidence > minConf
             e1 = self.calcConf(freqSet, e1, brl, minConf)
 
