@@ -1,7 +1,7 @@
-from apriori import Apriori
+from Apriori import Apriori
 
 if __name__ == '__main__':
-    s = float(input("Enter support s (default 0.5): ") or 0.5) 
+    s = float(input("Enter support s (default 0.5): ") or 0.5)
 
     dataset = []
 
@@ -13,3 +13,7 @@ if __name__ == '__main__':
     a = Apriori(dataset, support=s)
     print("Frequent itemsets with support = {}:".format(s))
     print(a.getFrequentItemset())
+
+    c = float(input("Enter confidence c (default 0.5): ") or 0.5)
+    rules = a.generateRules(minConf=c)
+    print('rules: ', rules)
